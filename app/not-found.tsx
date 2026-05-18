@@ -64,6 +64,8 @@ export default function NotFound() {
               mouse={mouse}
               enabled={ready}
               isAccent={isAccent}
+              shuffle
+              introDelay={i * 55}
             />
           ))}
         </div>

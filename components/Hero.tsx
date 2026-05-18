@@ -168,7 +168,11 @@ export default function Hero() {
                   color:         'var(--text-hero)', // fallback / a11y
                 }}>
                   {line.split('').map((char, charIdx) => {
-                    const isDot = lineIdx === 1 && charIdx === line.length - 1;
+                    const isDot    = lineIdx === 1 && charIdx === line.length - 1;
+                    // Stagger across all chars: line 0 first, then line 1
+                    const flatIdx  = lineIdx === 0
+                      ? charIdx
+                      : nameLines[0].length + charIdx;
                     return (
                       <MagneticLetter
                         key={charIdx}
@@ -177,6 +181,8 @@ export default function Hero() {
                         mouse={mouse}
                         enabled={magneticEnabled}
                         isAccent={isDot}
+                        shuffle
+                        introDelay={flatIdx * 55}
                       />
                     );
                   })}
