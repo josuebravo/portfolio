@@ -1,0 +1,368 @@
+/* Geist Sans @font-face */
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/geist-sans/Geist-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/geist-sans/Geist-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/geist-sans/Geist-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/geist-sans/Geist-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Geist Mono @font-face */
+@font-face {
+  font-family: 'GeistMono';
+  src: url('/fonts/geist-mono/GeistMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GeistMono';
+  src: url('/fonts/geist-mono/GeistMono-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --field-light: #EEEEEC;
+  --field-dark: #0C072A;
+  --indigo: #200392;
+  --indigo-mid: #180C50;
+  --pulse: #00CFBA;
+  --ink: #14122A;
+  --dust-light: #A09EAA;
+  --dust-mid: #655F82;
+  --dust-dark: #504C64;
+  --gray-meta: #757575;
+  --highlight-bg: rgba(4, 158, 226, 0.15);
+  --highlight-border: #60E4FC;
+  --footer-accent: #60E4FC;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  overscroll-behavior: none;   /* prevents rubber-band fighting Lenis */
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Geist', system-ui, sans-serif;
+  overscroll-behavior: none;
+}
+
+/* Theme transitions */
+*, *::before, *::after {
+  transition: background-color 0.5s ease, border-color 0.5s ease;
+}
+
+.no-transition {
+  transition: none !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 95, 130, 0.3);
+  border-radius: 999px;
+}
+
+/* Teal highlight block */
+.highlight-block {
+  background: rgba(4, 158, 226, 0.1);
+  border-left: 2px solid #60E4FC;
+  padding: 12px 16px;
+  border-radius: 0 8px 8px 0;
+}
+
+/* Clip for slide-up animation */
+.clip-overflow {
+  overflow: hidden;
+}
+
+/* Nav glass */
+.nav-glass-dark {
+  background: rgba(12, 7, 42, 0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+.nav-glass-light {
+  background: rgba(238, 238, 236, 0.8);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+/* Stats card glass */
+.stats-glass {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ── Theme CSS variables ──────────────────────────────────────────────────── */
+/* Default = light mode */
+:root {
+  --bg-hero:         #EEEEEC;
+  --bg-hero-alt:     #F4F4F2;
+  --text-hero:       #14122A;
+  --text-hero-muted: rgba(20,18,42,0.64);   /* WCAG AA ≥ 4.5:1 on light bg */
+  --text-hero-dim:   rgba(20,18,42,0.46);   /* WCAG AA 3:1 for large text */
+  --stats-divider:   rgba(20,18,42,0.08);
+  --grain-opacity:   0.055;
+  --glow-opacity:    0;
+  --grid-opacity:    0.045;
+  --cta-border:      rgba(20,18,42,0.18);
+  --tag-border:      rgba(20,18,42,0.14);
+  --tag-text:        rgba(20,18,42,0.52);
+  --hover-row-bg:    rgba(32,3,146,0.04);
+}
+html.dark {
+  --bg-hero:         #0C072A;
+  --bg-hero-alt:     #100838;
+  --text-hero:       #EEEEEC;
+  --text-hero-muted: rgba(238,238,236,0.64); /* WCAG AA ≥ 4.5:1 on dark bg */
+  --text-hero-dim:   rgba(238,238,236,0.46); /* WCAG AA 3:1 for large text */
+  --stats-divider:   rgba(255,255,255,0.07);
+  --grain-opacity:   0;
+  --glow-opacity:    1;
+  --grid-opacity:    0.028;
+  --cta-border:      rgba(255,255,255,0.16);
+  --tag-border:      rgba(255,255,255,0.13);
+  --tag-text:        rgba(238,238,236,0.46);
+  --hover-row-bg:    rgba(0,207,186,0.05);
+}
+
+/* ── Grain / noise background ─────────────────────────────────────────────── */
+@keyframes grain {
+  0%  { transform: translate(0,    0); }
+  10% { transform: translate(-1%, -2%); }
+  20% { transform: translate(2%,  -1%); }
+  30% { transform: translate(-2%,  2%); }
+  40% { transform: translate(1%,  -1%); }
+  50% { transform: translate(-1%,  2%); }
+  60% { transform: translate(2%,   1%); }
+  70% { transform: translate(-1%, -2%); }
+  80% { transform: translate(1%,   2%); }
+  90% { transform: translate(-2%, -1%); }
+}
+.grain-overlay {
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: var(--grain-opacity);
+  pointer-events: none;
+  animation: grain 8s steps(10) infinite;
+  z-index: 1;
+}
+
+/* Accessibility: focus ring */
+:focus-visible {
+  outline: 2px solid #00CFBA;
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* Custom cursor — hide default only after the JS cursor component mounts */
+@media (hover: hover) and (pointer: fine) {
+  .custom-cursor-ready,
+  .custom-cursor-ready * { cursor: none !important; }
+}
+
+/* Availability badge dot */
+@keyframes avail-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.35; transform: scale(0.85); }
+}
+.avail-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00CFBA;
+  flex-shrink: 0;
+  animation: avail-pulse 2.6s ease-in-out infinite;
+}
+
+/* ── Project panel — editorial two-column ─────────────────────────────────── */
+.project-panel {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: clamp(32px, 4vw, 64px);
+  align-items: center;
+  padding: clamp(52px, 7vw, 96px) clamp(24px, 5vw, 60px);
+}
+.project-panel__image-wrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  aspect-ratio: 4 / 3;
+}
+@media (max-width: 768px) {
+  .project-panel {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: clamp(40px, 8vw, 64px) clamp(20px, 5vw, 40px);
+  }
+  .project-panel__image-wrap {
+    order: -1;
+  }
+}
+
+/* Tag pill */
+.tag-pill {
+  font-family: 'GeistMono', monospace;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ── Featured Work gallery CSS vars ──────────────────────────────────────── */
+:root {
+  --project-accent:     #200392;
+  --glass-bg:           rgba(255,255,255,0.55);
+  --glass-border:       rgba(20,18,42,0.06);
+  --glass-blur:         blur(40px) saturate(200%);
+  --glass-shadow:       0 8px 40px rgba(20,18,42,0.08), inset 0 1px 0 rgba(255,255,255,0.80);
+  --glass-text:         #0c072a;
+  /* Footer — light mode */
+  --footer-bg:          #EEEEEC;
+  --footer-text-main:   #14122A;
+  --footer-text-dim:    rgba(20,18,42,0.58);
+  --footer-text-faint:  rgba(20,18,42,0.38);
+  --footer-divider:     rgba(20,18,42,0.09);
+  --footer-highlight:   #200392;
+  --footer-btn-border:  rgba(20,18,42,0.16);
+  --footer-btn-hover:   rgba(20,18,42,0.32);
+}
+html.dark {
+  --project-accent:     #00CFBA;
+  --glass-bg:           rgba(10,6,28,0.60);
+  --glass-border:       rgba(255,255,255,0.10);
+  --glass-blur:         blur(40px) saturate(200%);
+  --glass-shadow:       0 8px 40px rgba(0,0,0,0.50), inset 0 1px 0 rgba(255,255,255,0.09);
+  --glass-text:         #EEEEEC;
+  /* Footer — dark mode */
+  --footer-bg:          #07051A;
+  --footer-text-main:   #EEEEEC;
+  --footer-text-dim:    rgba(238,238,236,0.60);
+  --footer-text-faint:  rgba(238,238,236,0.38);
+  --footer-divider:     rgba(255,255,255,0.07);
+  --footer-highlight:   #00CFBA;
+  --footer-btn-border:  rgba(238,238,236,0.14);
+  --footer-btn-hover:   rgba(238,238,236,0.32);
+}
+
+/* ── Stats marquee ────────────────────────────────────────────────────────── */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-inner {
+    animation: none !important;
+  }
+}
+
+/* ── Featured Work sticky gallery ────────────────────────────────────────── */
+
+/* Prevent horizontal scroll from tags/glass cards extending past viewport */
+#projects { overflow-x: clip; }
+
+@media (max-width: 900px) {
+  .fw-glass     { display: none !important; }
+  .fw-tags-col  { display: none !important; }
+  .fw-tags-row  { display: flex !important; }
+  .fw-index     { display: none !important; }
+}
+
+/* ── Interactive hover utilities ─────────────────────────────────────────── */
+
+/* Outlined secondary buttons (email, LinkedIn, etc.) */
+.btn-outlined {
+  transition: color 0.22s ease, border-color 0.22s ease, background 0.22s ease !important;
+}
+.btn-outlined:hover {
+  color: var(--project-accent) !important;
+  border-color: var(--project-accent) !important;
+  background: var(--hover-row-bg) !important;
+}
+
+/* Filled accent buttons (Download CV, Let's talk, CTAs) */
+.btn-accent {
+  transition: opacity 0.22s ease !important;
+}
+.btn-accent:hover { opacity: 0.82; }
+
+/* Muted links (back nav, utility links) */
+.link-muted {
+  transition: color 0.22s ease, opacity 0.22s ease !important;
+}
+.link-muted:hover {
+  color: var(--project-accent) !important;
+  opacity: 1 !important;
+}
+
+/* Sidebar stepper items (inactive) */
+.stepper-item {
+  transition: opacity 0.22s ease, border-color 0.25s ease !important;
+}
+.stepper-item:hover { opacity: 0.65 !important; }
+
+/* ── FeaturedWork slide — responsive horizontal padding ──────────────────── */
+.fw-slide-inner {
+  padding: 0 clamp(88px, 12vw, 180px);
+}
+@media (max-width: 900px) {
+  .fw-slide-inner {
+    padding: 0 clamp(16px, 4vw, 28px);
+  }
+}
+
+/* ── Work page project grid — 1 col on mobile ─────────────────────────────── */
+@media (max-width: 640px) {
+  .project-work-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .project-work-grid > div {
+    grid-column: span 1 !important;
+  }
+}
