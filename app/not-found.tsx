@@ -1,38 +1,72 @@
 'use client';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { MagneticLetter } from '@/components/MagneticLetter';
 
 const EASE = [0.16, 1, 0.3, 1] as const;
+const CHARS: { char: string; isAccent?: boolean }[] = [
+  { char: '4' },
+  { char: '0', isAccent: true },
+  { char: '4' },
+];
+
+const charStyle: React.CSSProperties = {
+  fontFamily:    'Sora, sans-serif',
+  fontSize:      'clamp(100px, 22vw, 300px)',
+  fontWeight:    900,
+  letterSpacing: '-0.04em',
+  lineHeight:    0.84,
+  whiteSpace:    'nowrap',
+};
 
 export default function NotFound() {
+  const mouse   = useRef({ x: -9999, y: -9999 });
+  const [ready, setReady] = useState(false);
+
+  // Track mouse globally
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => { mouse.current = { x: e.clientX, y: e.clientY }; };
+    window.addEventListener('mousemove', onMove);
+    return () => window.removeEventListener('mousemove', onMove);
+  }, []);
+
+  // Enable magnetic after entrance animation
+  useEffect(() => {
+    const t = setTimeout(() => setReady(true), 900);
+    return () => clearTimeout(t);
+  }, []);
+
   return (
     <main style={{
-      minHeight: '100svh',
-      background: 'var(--bg-hero)',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
+      minHeight:      '100svh',
+      background:     'var(--bg-hero)',
+      display:        'flex',
+      flexDirection:  'column',
+      alignItems:     'center',
       justifyContent: 'center',
-      padding: 'clamp(40px, 8vw, 80px)',
-      gap: '0',
+      padding:        'clamp(40px, 8vw, 80px)',
     }}>
-      {/* Big 404 */}
+
+      {/* 404 — magnetic characters */}
       <motion.div
         initial={{ opacity: 0, y: 24, filter: 'blur(12px)' }}
         animate={{ opacity: 1, y: 0,  filter: 'blur(0px)' }}
         transition={{ duration: 0.8, ease: EASE }}
-        style={{ lineHeight: 0.84 }}
+        style={{ overflow: ready ? 'visible' : 'hidden' }}
       >
-        <span style={{
-          fontFamily:    'Sora, sans-serif',
-          fontSize:      'clamp(100px, 22vw, 300px)',
-          fontWeight:    900,
-          letterSpacing: '-0.04em',
-          color:         'var(--text-hero)',
-          display:       'block',
-        }}>
-          4<span style={{ color: 'var(--project-accent)' }}>0</span>4
-        </span>
+        <div style={{ lineHeight: 0.84 }}>
+          {CHARS.map(({ char, isAccent }, i) => (
+            <MagneticLetter
+              key={i}
+              char={char}
+              charStyle={charStyle}
+              mouse={mouse}
+              enabled={ready}
+              isAccent={isAccent}
+            />
+          ))}
+        </div>
       </motion.div>
 
       {/* Label */}
@@ -63,21 +97,22 @@ export default function NotFound() {
         <Link
           href="/"
           style={{
-            fontFamily:    'Geist, sans-serif',
-            fontSize:      '14px',
-            fontWeight:    500,
-            color:         'var(--project-accent)',
+            fontFamily:     'Geist, sans-serif',
+            fontSize:       '14px',
+            fontWeight:     500,
+            color:          'var(--project-accent)',
             textDecoration: 'none',
-            display:       'inline-flex',
-            alignItems:    'center',
-            gap:           '8px',
-            letterSpacing: '-0.005em',
+            display:        'inline-flex',
+            alignItems:     'center',
+            gap:            '8px',
+            letterSpacing:  '-0.005em',
           }}
         >
           <span aria-hidden="true">←</span>
           Back home
         </Link>
       </motion.div>
+
     </main>
   );
 }
