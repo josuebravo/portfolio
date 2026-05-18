@@ -9,11 +9,16 @@ export const metadata: Metadata = {
   title: 'Josue Bravo — UX/UI & Interaction Design Lead',
   description: 'Complex problems into clear, human products. Enterprise UX, AI Product Design, CRO. Mexico City · LATAM · US.',
   keywords: ['UX Design', 'UI Design', 'Interaction Design', 'AI Product Design', 'Enterprise UX', 'CRO'],
-  authors: [{ name: 'Josue Bravo', url: 'https://josuebravodi.dev' }],
+  authors: [{ name: 'Josue Bravo', url: 'https://josuebravo.com' }],
+  icons: {
+    icon:     '/favicon.svg',
+    shortcut: '/favicon.svg',
+  },
   openGraph: {
-    title: 'Josue Bravo — UX/UI & Interaction Design Lead',
+    title:       'Josue Bravo — UX/UI & Interaction Design Lead',
     description: 'The most valuable design impact starts before the first screen.',
-    type: 'website',
+    type:        'website',
+    url:         'https://josuebravo.com',
   },
 };
 
