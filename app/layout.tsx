@@ -4,6 +4,7 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 import { LangProvider } from '@/components/LangProvider';
 import Cursor from '@/components/Cursor';
 import SmoothScroll from '@/components/SmoothScroll';
+import ChatBot from '@/components/ChatBot';
 
 export const metadata: Metadata = {
   title: 'Josue Bravo — UX/UI & Interaction Design Lead',
@@ -38,6 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <LangProvider>
             <SmoothScroll>
               <Cursor />
+              <ChatBot />
               {children}
             </SmoothScroll>
           </LangProvider>
