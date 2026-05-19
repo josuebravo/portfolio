@@ -96,8 +96,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Service unavailable.' }, { status: 503 });
   }
 
-  // Build Gemini contents array (keep last 10 turns for context)
+  // Build contents array — system prompt injected as first user/model turn
+  // so it works with any model regardless of system_instruction support
+  const systemTurn = [
+    { role: 'user',  parts: [{ text: `[System context — follow these instructions for the entire conversation]\n\n${SYSTEM_PROMPT}` }] },
+    { role: 'model', parts: [{ text: 'Understood. I\'ll act as Josue\'s AI assistant following those guidelines.' }] },
+  ];
+
   const contents = [
+    ...systemTurn,
     ...history.slice(-10).map((m) => ({
       role:  m.role === 'user' ? 'user' : 'model',
       parts: [{ text: m.content }],
@@ -107,12 +114,11 @@ export async function POST(req: NextRequest) {
 
   try {
     const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-27b-it:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemma-4-27b-it:generateContent?key=${apiKey}`,
       {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
           contents,
           generationConfig: {
             temperature:     0.75,
