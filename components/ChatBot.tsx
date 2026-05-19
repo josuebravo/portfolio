@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/components/ThemeProvider';
+import { useLang } from '@/components/LangProvider';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -70,6 +71,7 @@ function TypingDots({ color }: { color: string }) {
 
 export default function ChatBot() {
   const { theme } = useTheme();
+  const { lang }  = useLang();
   const isDark    = theme === 'dark';
   const t         = isDark ? DARK : LIGHT;
 
@@ -78,7 +80,9 @@ export default function ChatBot() {
     {
       id:      'welcome',
       role:    'bot',
-      content: "Hi! I'm Josue's AI assistant. Ask me anything about his work, skills, or approach.",
+      content: lang === 'es'
+        ? '¡Hola! Soy el asistente de Josue. Pregúntame sobre su trabajo, habilidades o enfoque.'
+        : "Hi! I'm Josue's AI assistant. Ask me anything about his work, skills, or approach.",
     },
   ]);
   const [input,   setInput]   = useState('');
@@ -114,7 +118,7 @@ export default function ChatBot() {
       const res = await fetch('/api/chat', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ message: text, history }),
+        body:    JSON.stringify({ message: text, history, lang }),
       });
       const data = await res.json();
       const reply = data.reply ?? data.error ?? 'Something went wrong.';
@@ -183,7 +187,7 @@ export default function ChatBot() {
                   color:         t.textMain,
                   letterSpacing: '-0.01em',
                 }}>
-                  Ask about Josue
+                  {lang === 'es' ? 'Pregunta sobre Josue' : 'Ask about Josue'}
                 </span>
               </div>
               <button
@@ -278,7 +282,7 @@ export default function ChatBot() {
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={onKeyDown}
-                placeholder="Ask anything…"
+                placeholder={lang === 'es' ? 'Pregunta lo que quieras…' : 'Ask anything…'}
                 rows={1}
                 style={{
                   flex:          1,

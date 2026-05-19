@@ -75,14 +75,14 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  let body: { message: string; history?: { role: string; content: string }[] };
+  let body: { message: string; history?: { role: string; content: string }[]; lang?: string };
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: 'Invalid request body.' }, { status: 400 });
   }
 
-  const { message, history = [] } = body;
+  const { message, history = [], lang = 'en' } = body;
 
   if (!message || typeof message !== 'string' || message.trim().length === 0) {
     return NextResponse.json({ error: 'Message is required.' }, { status: 400 });
@@ -98,8 +98,12 @@ export async function POST(req: NextRequest) {
 
   // Build contents array — system prompt injected as first user/model turn
   // so it works with any model regardless of system_instruction support
+  const langInstruction = lang === 'es'
+    ? 'The site language is set to Spanish. Prefer responding in Spanish unless the user writes in another language, in which case match theirs.'
+    : 'The site language is set to English. Prefer responding in English unless the user writes in another language, in which case match theirs.';
+
   const systemTurn = [
-    { role: 'user',  parts: [{ text: `[System context — follow these instructions for the entire conversation]\n\n${SYSTEM_PROMPT}\n\nCRITICAL OUTPUT RULE: Reply ONLY with your final answer. Never output reasoning steps, bullet point breakdowns, internal analysis, or planning notes. Just write the response directly as if you were sending a chat message.` }] },
+    { role: 'user',  parts: [{ text: `[System context — follow these instructions for the entire conversation]\n\n${SYSTEM_PROMPT}\n\nLANGUAGE: ${langInstruction}\n\nCRITICAL OUTPUT RULE: Reply ONLY with your final answer. Never output reasoning steps, bullet point breakdowns, internal analysis, or planning notes. Just write the response directly as if you were sending a chat message.` }] },
     { role: 'model', parts: [{ text: 'Got it. I\'ll respond directly as Josue\'s assistant without showing any reasoning.' }] },
   ];
 
