@@ -99,8 +99,8 @@ export async function POST(req: NextRequest) {
   // Build contents array — system prompt injected as first user/model turn
   // so it works with any model regardless of system_instruction support
   const systemTurn = [
-    { role: 'user',  parts: [{ text: `[System context — follow these instructions for the entire conversation]\n\n${SYSTEM_PROMPT}` }] },
-    { role: 'model', parts: [{ text: 'Understood. I\'ll act as Josue\'s AI assistant following those guidelines.' }] },
+    { role: 'user',  parts: [{ text: `[System context — follow these instructions for the entire conversation]\n\n${SYSTEM_PROMPT}\n\nCRITICAL OUTPUT RULE: Reply ONLY with your final answer. Never output reasoning steps, bullet point breakdowns, internal analysis, or planning notes. Just write the response directly as if you were sending a chat message.` }] },
+    { role: 'model', parts: [{ text: 'Got it. I\'ll respond directly as Josue\'s assistant without showing any reasoning.' }] },
   ];
 
   const contents = [
