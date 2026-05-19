@@ -110,16 +110,16 @@ export async function POST(req: NextRequest) {
 
   try {
     const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemma-4-26b-a4b-it:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${apiKey}`,
       {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          system_instruction: { parts: [{ text: `${SYSTEM_PROMPT}\n\nLANGUAGE: ${langInstruction}` }] },
           contents,
           generationConfig: {
             temperature:     0.7,
             maxOutputTokens: 350,
-            thinkingConfig:  { thinkingBudget: 0 },
           },
         }),
       },
