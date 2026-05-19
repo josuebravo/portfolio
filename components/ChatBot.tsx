@@ -89,9 +89,24 @@ export default function ChatBot() {
   const [loading, setLoading] = useState(false);
   const [dragConstraints, setDragConstraints] = useState({ top: 0, left: 0, right: 0, bottom: 0 });
   const [bottomMargin,    setBottomMargin]    = useState(MARGIN);
+  const [panelDir,        setPanelDir]        = useState<{ v: 'up'|'down'; h: 'right'|'left' }>({ v: 'up', h: 'right' });
 
   const endRef   = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const fabRef   = useRef<HTMLDivElement>(null);
+
+  // Recompute panel direction from FAB's current screen position
+  const updatePanelDir = useCallback(() => {
+    const el = fabRef.current;
+    if (!el) return;
+    const rect  = el.getBoundingClientRect();
+    const cx    = rect.left + rect.width  / 2;
+    const cy    = rect.top  + rect.height / 2;
+    setPanelDir({
+      v: cy < window.innerHeight / 2 ? 'down' : 'up',
+      h: cx < window.innerWidth  / 2 ? 'left' : 'right',
+    });
+  }, []);
 
   // ── Drag constraints + mobile bottom offset ───────────────────────────────
   useEffect(() => {
@@ -174,10 +189,13 @@ export default function ChatBot() {
 
   return (
     <motion.div
+      ref={fabRef}
       drag
       dragMomentum={false}
       dragElastic={0}
       dragConstraints={dragConstraints}
+      onDrag={updatePanelDir}
+      onDragEnd={updatePanelDir}
       whileDrag={{ scale: 0.95 }}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -216,8 +234,8 @@ export default function ChatBot() {
             transition={{ duration: 0.22 }}
             style={{
               position:            'absolute',
-              bottom:              FAB_SIZE + 12,
-              right:               0,
+              ...(panelDir.v === 'up'   ? { bottom: FAB_SIZE + 12 } : { top: FAB_SIZE + 12 }),
+              ...(panelDir.h === 'right'? { right: 0 }              : { left: 0 }),
               width:               220,
               padding:             '10px 12px',
               borderRadius:        14,
@@ -274,8 +292,8 @@ export default function ChatBot() {
             transition={{ type: 'spring', stiffness: 320, damping: 26, mass: 0.9 }}
             style={{
               position:            'absolute',
-              bottom:              FAB_SIZE + 12,
-              right:               0,
+              ...(panelDir.v === 'up'   ? { bottom: FAB_SIZE + 12 } : { top: FAB_SIZE + 12 }),
+              ...(panelDir.h === 'right'? { right: 0 }              : { left: 0 }),
               width:               'min(380px, calc(100vw - 40px))',
               height:              'min(520px, calc(100svh - 120px))',
               borderRadius:        20,
