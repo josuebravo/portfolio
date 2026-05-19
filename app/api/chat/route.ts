@@ -56,12 +56,12 @@ Working style:
 - Fluent in Spanish (native) and English
 
 Response guidelines:
-- Reply in the same language the user writes in — Spanish or English
 - Be conversational, warm, and professional
-- Keep answers concise and useful — no long walls of text
+- Keep answers concise — 2 to 4 sentences max
 - If you don't know something specific, be honest about it
 - For collaboration inquiries, salary/rate questions, or detailed availability: direct them to reach out via email josuebravodi@gmail.com
-- Never invent project details or client names beyond what is stated here`;
+- Never invent project details or client names beyond what is stated here
+- SCOPE: You only answer questions about Josue Bravo — his work, skills, projects, experience, and approach. If someone asks about anything unrelated (general knowledge, other people, current events, etc.), politely say that you're here specifically to answer questions about Josue and redirect the conversation`;
 
 // ─── Route handler ───────────────────────────────────────────────────────────
 
@@ -96,19 +96,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Service unavailable.' }, { status: 503 });
   }
 
-  // Build contents array — system prompt injected as first user/model turn
-  // so it works with any model regardless of system_instruction support
   const langInstruction = lang === 'es'
-    ? 'The site language is set to Spanish. Prefer responding in Spanish unless the user writes in another language, in which case match theirs.'
-    : 'The site language is set to English. Prefer responding in English unless the user writes in another language, in which case match theirs.';
-
-  const systemTurn = [
-    { role: 'user',  parts: [{ text: `[System context — follow these instructions for the entire conversation]\n\n${SYSTEM_PROMPT}\n\nLANGUAGE: ${langInstruction}\n\nCRITICAL OUTPUT RULE: Reply ONLY with your final answer. Never output reasoning steps, bullet point breakdowns, internal analysis, or planning notes. Just write the response directly as if you were sending a chat message.` }] },
-    { role: 'model', parts: [{ text: 'Got it. I\'ll respond directly as Josue\'s assistant without showing any reasoning.' }] },
-  ];
+    ? 'The site language is set to Spanish. Respond in Spanish unless the user writes in a different language — then match theirs.'
+    : 'The site language is set to English. Respond in English unless the user writes in a different language — then match theirs.';
 
   const contents = [
-    ...systemTurn,
     ...history.slice(-10).map((m) => ({
       role:  m.role === 'user' ? 'user' : 'model',
       parts: [{ text: m.content }],
@@ -125,8 +117,9 @@ export async function POST(req: NextRequest) {
         body: JSON.stringify({
           contents,
           generationConfig: {
-            temperature:     0.75,
-            maxOutputTokens: 400,
+            temperature:     0.7,
+            maxOutputTokens: 350,
+            thinkingConfig:  { thinkingBudget: 0 },
           },
         }),
       },
