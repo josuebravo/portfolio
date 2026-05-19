@@ -235,25 +235,28 @@ export default function ChatBot() {
             transition={{ duration: 0.22 }}
             style={{
               position:            'absolute',
-              ...(panelDir.v === 'up'   ? { bottom: FAB_SIZE + 12 } : { top: FAB_SIZE + 12 }),
+              ...(panelDir.v === 'up'   ? { bottom: FAB_SIZE + 10 } : { top: FAB_SIZE + 10 }),
               ...(panelDir.h === 'right'? { right: 0 }              : { left: 0 }),
-              width:               220,
-              padding:             '10px 12px',
-              borderRadius:        14,
+              padding:             '6px 14px',
+              borderRadius:        999,
               background:          t.teaserBg,
-              backdropFilter:      'blur(24px) saturate(160%)',
-              WebkitBackdropFilter:'blur(24px) saturate(160%)',
+              backdropFilter:      'blur(20px) saturate(160%)',
+              WebkitBackdropFilter:'blur(20px) saturate(160%)',
               border:              `1px solid ${t.border}`,
-              boxShadow:           t.shadow,
+              boxShadow:           isDark
+                ? '0 4px 20px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.06) inset'
+                : '0 4px 20px rgba(20,18,42,0.10), 0 1px 0 rgba(255,255,255,0.9) inset',
+              whiteSpace:          'nowrap',
               pointerEvents:       'none',
             }}
           >
             <span style={{
               fontFamily:    'Geist, sans-serif',
-              fontSize:      '12.5px',
-              lineHeight:    1.5,
+              fontSize:      '12px',
+              fontWeight:    450,
+              lineHeight:    1,
               color:         t.textMain,
-              letterSpacing: '-0.005em',
+              letterSpacing: '-0.01em',
             }}>
               {lang === 'es'
                 ? '¿Preguntas sobre el trabajo de Josue?'
