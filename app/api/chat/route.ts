@@ -112,9 +112,17 @@ export async function POST(req: NextRequest) {
     { role: 'user', parts: [{ text: message }] },
   ];
 
+  // Temporary: log available models so we can find the correct ID
+  try {
+    const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+    const listData = await listRes.json();
+    const names = (listData.models ?? []).map((m: { name: string }) => m.name);
+    console.log('[chat] Available models:', JSON.stringify(names));
+  } catch { /* ignore */ }
+
   try {
     const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemma-4-27b-it:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemma-4-26b-it:generateContent?key=${apiKey}`,
       {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
