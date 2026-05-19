@@ -82,6 +82,7 @@ export default function ChatBot() {
 
   const [open,       setOpen]       = useState(false);
   const [showTeaser, setShowTeaser] = useState(false);
+  const [hovered,    setHovered]    = useState(false);
   const [messages,   setMessages]   = useState<Message[]>([
     { id: 'welcome', role: 'bot', content: welcomeText },
   ]);
@@ -225,7 +226,7 @@ export default function ChatBot() {
 
       {/* ── Teaser bubble ── */}
       <AnimatePresence>
-        {showTeaser && !open && (
+        {(showTeaser || hovered) && !open && (
           <motion.div
             key="teaser"
             initial={{ opacity: 0, y: 6, scale: 0.94 }}
@@ -434,6 +435,8 @@ export default function ChatBot() {
       {/* ── FAB button ── */}
       <motion.button
         onClick={() => { setOpen(o => !o); if (showTeaser) dismissTeaser(); }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
         aria-label={open ? 'Close chat' : "Chat with Josue's AI"}
         whileHover={{ scale: 1.07 }}
         whileTap={{   scale: 0.94 }}
