@@ -245,15 +245,10 @@ export default function ChatBot() {
               WebkitBackdropFilter:'blur(24px) saturate(160%)',
               border:              `1px solid ${t.border}`,
               boxShadow:           t.shadow,
-              display:             'flex',
-              alignItems:          'flex-start',
-              gap:                 8,
-              pointerEvents:       'all',
-              cursor:              'default',
+              pointerEvents:       'none',
             }}
           >
             <span style={{
-              flex:          1,
               fontFamily:    'Geist, sans-serif',
               fontSize:      '12.5px',
               lineHeight:    1.5,
@@ -264,20 +259,6 @@ export default function ChatBot() {
                 ? '¿Preguntas sobre el trabajo de Josue?'
                 : "Got questions about Josue's work?"}
             </span>
-            <button
-              onClick={dismissTeaser}
-              style={{
-                flexShrink:  0,
-                background:  'transparent',
-                border:      'none',
-                cursor:      'pointer',
-                color:       t.textDim,
-                fontSize:    17,
-                lineHeight:  1,
-                padding:     0,
-                marginTop:   -1,
-              }}
-            >×</button>
           </motion.div>
         )}
       </AnimatePresence>
