@@ -66,8 +66,9 @@ function TypingDots({ color }: { color: string }) {
 
 // ─── ChatBot ─────────────────────────────────────────────────────────────────
 
-const FAB_SIZE = 52;
-const MARGIN   = 20;
+const FAB_SIZE        = 52;
+const MARGIN          = 20;
+const MARGIN_MOBILE_B = 84; // clear the bottom nav on mobile
 
 export default function ChatBot() {
   const { theme }  = useTheme();
@@ -87,18 +88,24 @@ export default function ChatBot() {
   const [input,   setInput]   = useState('');
   const [loading, setLoading] = useState(false);
   const [dragConstraints, setDragConstraints] = useState({ top: 0, left: 0, right: 0, bottom: 0 });
+  const [bottomMargin,    setBottomMargin]    = useState(MARGIN);
 
   const endRef   = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  // ── Drag constraints ──────────────────────────────────────────────────────
+  // ── Drag constraints + mobile bottom offset ───────────────────────────────
   useEffect(() => {
-    const update = () => setDragConstraints({
-      top:  -(window.innerHeight - FAB_SIZE - MARGIN - 16),
-      left: -(window.innerWidth  - FAB_SIZE - MARGIN - 16),
-      right:  0,
-      bottom: 0,
-    });
+    const update = () => {
+      const mobile = window.innerWidth < 768;
+      const bm     = mobile ? MARGIN_MOBILE_B : MARGIN;
+      setBottomMargin(bm);
+      setDragConstraints({
+        top:  -(window.innerHeight - FAB_SIZE - bm - 16),
+        left: -(window.innerWidth  - FAB_SIZE - MARGIN - 16),
+        right:  0,
+        bottom: 0,
+      });
+    };
     update();
     window.addEventListener('resize', update);
     return () => window.removeEventListener('resize', update);
@@ -177,7 +184,7 @@ export default function ChatBot() {
       transition={{ delay: 1.2, type: 'spring', stiffness: 300, damping: 22 }}
       style={{
         position:    'fixed',
-        bottom:      MARGIN,
+        bottom:      bottomMargin,
         right:       MARGIN,
         zIndex:      60,
         width:       FAB_SIZE,
